@@ -1,0 +1,87 @@
+<html>
+<head>
+<!-- <script type="text/javascript" src="./monitor/index.js"></script> -->
+<script type="text/javascript">
+  (function(w) {
+            w._error_storage_ = [];
+            w.ERROR_CONFIG = {
+                client: 'test',
+                imgUrl: '//yun.baidu.com?', // http://retcode.tuipink.com/report
+                version: '0.0.1',
+                pageId: 'smashg_2',
+                isResource: true,
+            };
+            // 处理事件列表
+            w.eventTaskList = [];
+            original_addEventListener = EventTarget.prototype.addEventListener;
+            function eventTask(fn, evt) {
+              if (eventTaskList.length > 10) {
+                w.eventTaskList.shift();
+              }
+              w.eventTaskList.push({
+                event: fn,
+                evt: evt
+              });
+              console.log(w.eventTaskList);
+            }
+            function new_addEventListener(type, listener, options) {
+              return original_addEventListener.call(
+                this,
+                type,
+                wrapper(this, listener, type), // newlistener 
+                options
+              );
+            }
+            function wrapper(target, listener,) {
+              return function (evt) {
+                listener(evt);
+                eventTask(listener, evt);
+              };
+            }
+            EventTarget.prototype.addEventListener = new_addEventListener;
+            
+            function errorhandler(){
+                // 用于记录当前的错误
+                w._error_storage_&&w._error_storage_.push([].slice.call(arguments));
+                console.log(w._error_storage_);
+            } 
+            w.addEventListener && w.addEventListener("error", errorhandler, true);
+            var times = 3,
+            appendScript = function appendScript() {
+                var sc = document.createElement("script");
+                sc.async = !0,
+                sc.src = './build/skyeye.js',  // 取决于你存放的位置
+                sc.crossOrigin = "anonymous",
+                sc.onerror = function() {
+                    times--,
+                    times > 0 && setTimeout(appendScript, 1500)
+                },
+                document.head && document.head.appendChild(sc);
+            };
+            setTimeout(appendScript, 1500);
+        })(window);
+</script>
+</head>
+<body>
+<button id="t1">A</button>
+<button id="t2">B</button>
+<button id="t3">C</button>
+<button id="t4">报错</button>
+<script type="text/javascript">
+// $petal.evtmonitor.switchOn();
+function click(evt) {
+  console.log('click', evt.target.outerText);
+  console.log(evt.target);
+}
+function clickFalse(evt) {
+  console.log(evt.target);
+  a = b;
+  // console.log('click', clickFalse111);
+}
+document.querySelector('#t1').addEventListener('click', click, false);
+document.querySelector('#t2').addEventListener('click', click, false);
+document.querySelector('#t3').addEventListener('click', click, false);
+document.querySelector('#t4').addEventListener('click', clickFalse, false);
+
+</script>
+</body>
