@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        try{
+            (function test() {
+    console.log(a);
+})();
+        }catch(err){
+           console.log(err)
+        }
+     
+// window.onerror = function () {
+//     console.log('onerror');
+// } 
+window.onerror = function(msg, url, line, col, error) {
+  // 直接将错误打印到控制台
+  console.log(arguments)
+
+  // 方便在未打开控制台的时候，记录错误对象
+  window.demoError = arguments
+
+}
+
+function makeError () {
+  var name = "geoff"
+  var msg = "Hi, " + Name
+  console.log(msg)
+}
+
+makeError()
+
+
+</script>
+</body>
+</html>
